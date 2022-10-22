@@ -1,26 +1,19 @@
-public class SimpleStartup{
-    int[] locationCells;
-    int numOfHits = 0;
+import java.util.ArrayList;
 
+public class SimpleStartup{
+    ArrayList<Integer> locationCells;
     String checkYourself(int guess){
         String result = "missed";
-        for (int i : locationCells) {
-            if(i==guess){
-                numOfHits++;
-                if (numOfHits == 3){
-                    result = "kill";
-                    break;
-                }else{
-                    result = "hit";
-                    break;
-                }
-            }
+        if(locationCells.contains(guess)){
+            int index = locationCells.indexOf(guess);
+            locationCells.remove(index);
+            result = locationCells.isEmpty()?"kill":"hit";
         }
         System.out.println(result);
         return result;
     }
 
-    void setLocationCells(int[] loc){
+    void setLocationCells(ArrayList<Integer> loc){
         locationCells = loc;
     }
 }
