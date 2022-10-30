@@ -44,5 +44,18 @@ Chapter 12
     - a.HashCode() == b.HashCode()
     - a.equal(b)
 - How to override your customized object's HashCode?
-    - 
+    - By using the already implemented hashcode of "primitive" or "primitive wrapper" class
+- TreeSet Vs HashSet
+    - TreeSet could sort and unique the elements
+        - The elements in the list  must be of a type that  implements Comparable
+        - You use the TreeSet’s overloaded constructor that takes a Comparator
+- Convenience Factory Methods for Collections
+    - The resulting collections cannot be changed
+    - The resulting collections are not the standard Collections we’ve seen
+    - List.of(); Set.of(); Map.of(); Map.ofEntries()
+- use polymorphic arguments and generics
+    - public void takeAnimals(List<Animal> animals) VS public void takeAnimals(List<? extends Animal> animals) 
+    
+
+
 
