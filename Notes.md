@@ -55,7 +55,70 @@ Chapter 12
     - List.of(); Set.of(); Map.of(); Map.ofEntries()
 - use polymorphic arguments and generics
     - public void takeAnimals(List<Animal> animals) VS public void takeAnimals(List<? extends Animal> animals) 
-    
+- the type of a lambda expression is this interface with a Single Abstract Method
+- How to judge SAM Interfaces: With **interfaces**, any method that is not defined as **default** or **static** is an abstract method that must be overridden and there is only one such method 
+    - a **default** method works a bit like a standard method in an abstract class—they have a body, and will be inherited by subclasses
+    - **static** methods  don’t need to belong to an instance, and are often used as helper methods
+    - Inherited methods from Object e.g. equals
+- If a method is labeled as "@FunctionalInterface", then it is a SAM Interfaces and could be used with Lambda function
+- method references: 
+    - e.g. Function<Song, String> getGenre = Song::getGenre;
+    - Similar functionality as lambda function
+- Wrapper Optional 
+    - e.g. Optional<Song> result = songs.stream().filter(s -> s.getYear() == 1995).findFirst();
+    - result.isPresent() to check whether the wrapped object (in this case, Song) existed
+    - result.get() to get the wrapped object
+- Some Terminal functions in Stream
+    - Collectors.joining <=> "xx".join() in Python
+    - check if something exists: anyMatch()...
+    - find a specific thing: findFirst() 
+
+Chapter 13
+- Risky methods that could fail at runtime declare the exceptions that might happen using “throws SomeKindOfException” on their method declaration
+    - public static Sequencer getSequencer() **throws MidiUnavailableException**
+- The compiler checks for everything except RuntimeExceptions
+    - If you throw an exception in your method, you must declare it using the throws keyword in your method declaration
+    - If you call a method that declares it throws an exception, you must acknowledge that you’re aware of the exception possibility. One way to satisfy the compiler is to wrap the call in a try/catch. 
+- If the try or catch block has a return statement, finally will still run! Flow jumps to the finally, then back to the return.
+- 2 Ways of dealing with risky methods:
+    - Handle
+    - Declare
+
+Chapter 14
+- a control is called **Event Source**
+- **Event Source** creates **Event Object** and need to know **event listeners** (add{Action}Listener())
+    - Accept Registration, Get Events, and Call the Listener's event-handling method
+- **Event Listeners**, when event source fires an event, event listeners should react with {action}Performed() (implemented from the **listener interface**)
+    - implement the interface, register with event source and provide the event-handling
+- Every **event object** has a matching **listener interface**. If you want MouseEvents, implement the MouseListener interface. The interface might have several different **event methods**
+    - argument to event methods
+    - carry data about the event back to the listener
+- **Inner class**:
+    - An inner class can use all the methods and variables of the outer class, even the private ones.
+    - The inner class gets to use those variables and methods just as if the methods and variables were declared within the inner class
+    - Benefits:
+        - Outer class could implement the same interface's method more than once
+        - a way to inherit more than one class (the outer class and inner class are in different inheritance trees)
+    - Alternatives: Lambda Function
+
+Chapter 15
+- A layout manager is a Java object associated with a particular component, almost always a background component.
+- The layout manager controls the components contained **within** the component the layout manager is associated with
+- 3 types of layout managers
+    - BorderLayout
+        - five regions: North, South, East, West, Center
+        - e.g. frame
+    - FLowLayout
+        - like word processors: components added from left to right, wrapping to a new line when needed
+        - e.g. panel
+    - BoxLayout
+        - stack components vertically or horizontally
+- You could set Layout from FlowLayout to BoxLayout
+    - panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+- You can ask Layout Manager to layout the inner component by:
+    - <OutComponent>.add(...);
+
+
 
 
 
