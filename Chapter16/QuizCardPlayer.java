@@ -45,7 +45,6 @@ public class QuizCardPlayer {
         loadMenuItem.addActionListener(e->open());
         fileMenu.add(loadMenuItem);
         menuBar.add(fileMenu);
-        frame.setJMenuBar((fileMenu));
         frame.setJMenuBar(menuBar);
 
         frame.getContentPane().add(BorderLayout.CENTER, mainPanel);
@@ -97,7 +96,7 @@ public class QuizCardPlayer {
 
     private void makeCard(String lineToParse){
         String[] result = lineToParse.split("/");
-        QuizCard card = new QuizCard(result[0], result[1];
+        QuizCard card = new QuizCard(result[0], result[1]);
         cardList.add(card);
         System.out.println("make a card");
     }

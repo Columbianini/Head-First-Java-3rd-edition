@@ -159,6 +159,21 @@ Chapter 16
     - the newly created objects in the try block need to implement Autocloseable
     - you can write more than one object in the try block. They will be deleted in the reverse order
     
+Chapter17
+- a chat program: connect, send and receive
+    - connect: connect server **channel** with client **channel** using IP Addresss(Shopping mall) and TCP port (store)
+        - way 1: InetSocketAddress serverAddress = new InetSocketAddress(<IP Address>, <TCP Port>); SocketChannel socketChannel = SocketChannel.open(serverAddress)
+        - way 2: Socket chatSocket = new Socket(<IP Address>, <TCP port>);
+    - send: use chainstream + connection stream, and write msg using chainstream method
+        - way 1: Reader reader = socketChannel.newReader(socketChannel, StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(reader); String msg = bufferedReader.readLine();
+        - way 2: Reader reader = new InputStreamReader(chatSocket.getInputStream()); BufferedReader bufferedReader = new BufferedReader(reader); String msg = bufferedReader.readLine();
+    - write: 
+        - way 1: Writer writer = socketChannel.newWriter(socketChannel, StandardCharsets.UTF_8); PrintWriter printWriter = new PrintWriter(writer);
+        writer.println(....);
+        - way 2: PrintWriter writer = new PrintWriter(chatSocket.getOutputStream()); writer.println(....);
+- *TODO* Channels can support **nonblocking I/O**, reading and writing via **ByteBuffers**, and **asynchronous I/O**.
+
+
 
 
 
