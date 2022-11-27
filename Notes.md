@@ -118,6 +118,54 @@ Chapter 15
 - You can ask Layout Manager to layout the inner component by:
     - <OutComponent>.add(...);
 
+Chapter 16
+- Streams
+    - **Connection Stream**: represent connections to destinations and sources such as files or network sockets, used to represent connection, e.g. FileOutputStream
+    - **Chain Stream**: work only if chained to other streams; used to call methods on, e.g. ObjectOutputStream
+- Serialization saves the entire object graph—all objects referenced by instance variables, starting with the object being serialized
+- If you want your class to be serializable, implement Serializable
+    - if the upper class already implemented Serializable, the subclass will automatically implemented Serializable
+- If you want an instance variable to be skipped by the serialization process, mark the variable with the **transient** keyword
+    - when you inflate the object, the variable with transient will be null
+- You could serialize/deserialize several objects into the same file "xxx.ser"
+- **static** variable is not serialized
+- if current project could not find the class from which the serialized object is made, deserialization process would generate exception
+- Tips: 
+    - JFrame.set(JMenuBar); JMenuBar.add(JMenu); JMenu.add(MenuItem)
+    - JFileChooser: Brings up a file dialog box and waits on this line until the user chooses ‘Save’ from the dialog box. All the file dialog navigation and selecting a file, etc., is done for you by the JFileChooser! It really is this easy.
+    - A File object represents the name and path of a file or directory on disk, But it does NOT represent, or give you access to, the data in the file!
+        - make a file
+        - make a directory
+        - list the contents of a directory
+        - delete a file or directory
+- Buffers give you a temporary holding place to group things until the buffer (like the cart) is full. You get to make far fewer trips when you use a buffer.   
+    - Only when the buffer is full will the FileWriter actually be told to write to the file on disk. 
+    - If you want to send data to the disk before the buffer is full, you should call **flush**
+- Tips:
+    - write text files: BufferedReader and BufferedWriter (chained to FileReader and FileWriter)
+    - write serialized objects: ObjectOutputStream and 
+    ObjectInputStream (chained to FileInputStream and 
+    FileOutputStream)
+- Java NIO2 package (java.nio.file + java.nio.file.attribute (manipulate the metadata associated with the files and directories, e.g. change permissions))
+    - Path: use Path object to locate the directories or files you want to work with
+    - Paths: use Paths.get(...) to create Path object
+    - Files: use the static methods to do things like
+        - make new Readers and Writers
+        - create, modify and search through directories and files on file systems
+- conventions in Java IO: use try-with-resource
+    - e.g.
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(file)); BufferedReader reader = new BufferedReader(new FileReader(file))) {...}
+    catch{}
+    - the newly created objects in the try block need to implement Autocloseable
+    - you can write more than one object in the try block. They will be deleted in the reverse order
+    
+
+
+
+
+
+
+
 
 
 
