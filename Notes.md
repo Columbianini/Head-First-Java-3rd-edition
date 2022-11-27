@@ -161,18 +161,51 @@ Chapter 16
     
 Chapter17
 - a chat program: connect, send and receive
-    - connect: connect server **channel** with client **channel** using IP Addresss(Shopping mall) and TCP port (store)
-        - way 1: InetSocketAddress serverAddress = new InetSocketAddress(<IP Address>, <TCP Port>); SocketChannel socketChannel = SocketChannel.open(serverAddress)
-        - way 2: Socket chatSocket = new Socket(<IP Address>, <TCP port>);
-    - send: use chainstream + connection stream, and write msg using chainstream method
-        - way 1: Reader reader = socketChannel.newReader(socketChannel, StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(reader); String msg = bufferedReader.readLine();
-        - way 2: Reader reader = new InputStreamReader(chatSocket.getInputStream()); BufferedReader bufferedReader = new BufferedReader(reader); String msg = bufferedReader.readLine();
-    - write: 
-        - way 1: Writer writer = socketChannel.newWriter(socketChannel, StandardCharsets.UTF_8); PrintWriter printWriter = new PrintWriter(writer);
-        writer.println(....);
-        - way 2: PrintWriter writer = new PrintWriter(chatSocket.getOutputStream()); writer.println(....);
+    - client side:
+        - connect: connect server **channel** with client **channel** using IP Addresss(Shopping mall) and TCP port (store)
+            - way 1: InetSocketAddress serverAddress = new InetSocketAddress(<IP Address>, <TCP Port>); SocketChannel socketChannel = SocketChannel.open(serverAddress)
+            - way 2: Socket chatSocket = new Socket(<IP Address>, <TCP port>);
+        - send: use chainstream + connection stream, and write msg using chainstream method
+            - way 1: Reader reader = socketChannel.newReader(socketChannel, StandardCharsets.UTF_8); BufferedReader bufferedReader = new BufferedReader(reader); String msg = bufferedReader.readLine();
+            - way 2: Reader reader = new InputStreamReader(chatSocket.getInputStream()); BufferedReader bufferedReader = new BufferedReader(reader); String msg = bufferedReader.readLine();
+        - write: 
+            - way 1: Writer writer = socketChannel.newWriter(socketChannel, StandardCharsets.UTF_8); PrintWriter printWriter = new PrintWriter(writer);
+            writer.println(....);
+            - way 2: PrintWriter writer = new PrintWriter(chatSocket.getOutputStream()); writer.println(....);
+    - server side:
+        - connect：create a serversocketchannel and wait for client request
+            - ServerSocketChannel serverSocketChannel = ServerSocketChannel.open(); serverSocketChannel.bind(InetSocketAddress); while(serverSocketChannel.isopen()){SocketChannel clientChannel = serverSocketChannel.accept(); ......}
+        - reader/writer: similar to client side
 - *TODO* Channels can support **nonblocking I/O**, reading and writing via **ByteBuffers**, and **asynchronous I/O**.
-
+- Server and client are just individual PCs, they write or receive message on SocketChannel
+    - client get the SocketChannel (with server) through: SocketChannel.open(serverAddress);
+    - server get the SocketChannel (with client) through: serverSocketChannel.accept();
+        - when the read/write request from client comes for the first time, accept() will create a socket channel for it. When the read/write request from client comes for the second time, it will communicate through the previous channel
+- DEBUG EXPERIENCES:
+    - DO NOT PUT CONNECTION in try-with-resource syntax, as it will close the connection right after first-time connection!!! Check line 33 at Chapter17/SimpleChatClientA.java
+- use Executors class (to create ExecutorServices) to create multithreaded applications in Java
+- a thread = a seperate call stack with run() at the bottom
+- a thread needs an instance that implements **Runable**
+- 4 states of thread:
+    - NEW: not started
+    - RUNNABLE： started and waiting to be chosen to run.
+    - RUNNING: selected by thread scheduler to run
+    - NON-RUNNABLE: blocked because
+        - wait data from stream
+        - sleep
+            - you could put a thread to sleep and give the other threads to run. But **you have to use try...catch... syntax as it will generate Exception: try{Thread.sleep(2000);}catch(Exception ex){ex.printStackTrace();}** 
+                - you can use Thread.sleep(2000) or TimeUnit.SECONDS.sleep(2);
+            - CountDownLatch: create CountDownLatch in mainthread, pass the latch to runnable, call latch.countDown() to let other threads run; in the subthread, try{latch.await()}catch(Exception ex){...}...
+        - wait for an object's lock
+- Barrier Synchronizer: mechanisms to allow threads to coordinate with each other, e.g. **CountDownLatch,CyclicBarrier,Phaser**
+- ExecutorServices should be shut down correctly so the jobs are finished andthreads terminated. Use shutdown() for graceful shutdown, and shutdownNow() to kill everything
+    - shutdown(): reject new jobs but will finish running and waiting jobs
+    - try{boolean finished = awaitTermination(5, TimeUnit.SECONDS)}catch(Exception ex){ex.printStackTrace();}
+        - Wait up to 5 seconds for the ExecutorService to finish everything. 
+        - If this method hits the timeout before everything has finished, it returns “false.
+        - If everything has finished, it returned "true"
+    - shutdownNow(): kill every job
+    
 
 
 
