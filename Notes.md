@@ -246,8 +246,59 @@ Chapter 18
         - potential issue: some threads are reading from the old data
         - usage: lots of reading threads and not many writing
 
-
-
+Appendix B:
+- JShell
+- Package:
+    - setup
+        - It’s not enough to say your class is in a package by merely putting a package statement in the code. 
+        - Your class isn’t truly in a package until you put the class in a matching directory structure. 
+        - So, if the fully qualified class name is com.headfirstjava.PackageExercise, you must put the PackageExercise source code in a directory named headfirstjava, which must be in a directory named com.
+    - compile and run 
+        - compile
+            - cd MyProject/source 
+            - javac -d ../classes com/headfirstjava/PackageExercise.java
+                - javac -d ../classes com/headfirstjava/*.java
+                - Tells the compiler to put the compiled code (class files) into the classes directory, within the right package structure
+                - specify the PATH to get to the actual source file
+        - run
+            - cd MyProject/classes
+            - java com.headfirstjava.PackageExercise
+                - You MUST give the fully qualified class name! The JVM will see that and immediately look inside its current directory (classes) and expect to find a directory named com, where it expects to find a directory named headfirstjava, and in there it expects to find the class. If the class is in the “com” directory, or even in “classes,” it won’t work!
+- Immutability in Strings and Wrappers
+    - String is immutable, everytime it will put a new string into a string pool
+    - if you a mutable string. use StringBuilder and its method append and toString()
+- Access Levels and access modifiers
+    - public 
+    - protected: visible only to classes under the same package and also allow subclasses in/outside the package to inherit the protected thing
+        - If a subclass-outside-the-package has a reference to an instance of the superclass (the superclass that has, say, a protected method), the subclass can’t access the protected method using that superclass reference! The subclass-outside-the-package doesn’t have **access** to the protected method; it just **has** the method, through inheritance
+    - default: visible only to classes under same package
+    - private: visible only to the same class. rivate means that only code within the same class can access the private thing. Keep in mind it means private to the class, not private to the object. One Dog can  see another Dog object’s private stuff, but a Cat can’t see a Dog’s privates
+- varargs
+    - Object...elements <=> Object[] elements
+- Lambdas and Maps
+    - computeIfAbsent(key, lambda expression(e.g. key->...)): return value if the key exists. Or create an new entry and return the value
+    - computeIfPresent(key, lambda expression (e.g. (key, value)->...)): update value only if it the key exists
+- Parallel Streams (multiprocessing)
+    - how to use? 
+        - collections.stream().parallel()
+        - collections.parallelStream()
+    when to use?
+        - The input collection is BIG (thousands of or hundreds of elements at least)
+        - The stream pipeline is performing complicated, long running operations
+        - The decomposition (splitting) of the data/operations and merging of the results are not too costly
+- Enumerations
+    - similar to class definition
+        - public enum EnumClass {A, B, C};
+        - public EnumClass enumObject = EnumClass.A;
+- var: >= java10    
+    -  Variable will be the concrete type, not the upper class type
+        - e.g. var list = new ArrayList< String >();
+            - here the list will be inferred as ArrayList< String >, not List< String >
+    -  Don’t use var with the diamond operator
+        - e.g.  var list = new ArrayList<>();
+        - This is an ArrayList< Object >,  probably not what you want
+- records: java >= 16
+        
 
 
 
