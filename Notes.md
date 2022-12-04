@@ -206,8 +206,45 @@ Chapter17
         - If everything has finished, it returned "true"
     - shutdownNow(): kill every job
     
-
-
+Chapter 18
+- Race condition: When 2 or more threads(i.e. **Runnable objects**) have access to a single **same** object's data
+    - access: read / write
+    - e.g. if one thread, for example, leaves the running state (e.g. finish check balance but before spend) while still in the middle of manipulating an object’s critical state
+- lock the object: when a thread (i.e. Runnable object) want to access an object. It will lock the object for certain transactions and take the key. And then when another thread (i.e. Runnable object) want to access the same object in the same transactions. It could not access to the certain transactions since there is no key to the object lock
+-  synchronization: make a specific section of code work **atomically (i.e. must finish the synchronized method or block at one thread before another thread enter the same block/method on the same object)**
+- every object has a lock. The lock comes to play when there is a **synchronized block**(i.e. use the synchronized keyword with a specified object, e.g. lock(account)) for an object or the object  has **synchronized methods** (i.e. there is a keyword synchronized in the method declaration).
+    - synchronized block: tell you to lock and check which object when you try to run the block。 For example, lock(account){...}: when program run here, it tells Java to first check whether account object is locked, if not, lock the account object and continue
+    - when an object has synchronized methods, a thread can only enter a synchronized method only if the thread can get the key to the **object's lock (no lock for the method)**
+    -**The locks are per object, not per method!!!** If an object has 2 synchronized methods, it means when one thread is using (i.e. lock) the object, another thread could not use any of the synchronized methods. 
+- The goal of synchronization is to protect critical data. But remember, you don’t lock the data itself; **you synchronize the methods/blocks that access that data.**
+- what happens when a thread is running its call stack and suddenly hits an object's synchronized method?
+    - the thread recognize that it needs a key for that object before it can enter the method
+    - It looks for the key and if the key is available, the thread grab the key and enter the method
+    - the thread will continue to run until it completes the synchronized method or block
+    - So while the thread is holding the object's key, no other threads can enter any of the object's synchronized methods, because one key for that object will not be available
+- each loaded **class** has a lock
+    - e.g. if you have three Dog objects on your heap, you have a total of four Dog-related locks; three belonging to the three Dog instances, and one belonging to the Dog class itself. 
+    - When you synchronize a static method, Java uses the lock of the class itself. 
+    - So if you synchronize two static methods in a single class, a thread will need the class lock to enter either of the methods
+- even "i++" need synchronize, since it will read the variable "i" first and then i++
+- bad synchronization outcomes:
+    - slow performance
+    - deadlock: 2 objects and 2 threads
+        - both threads hold the key that the other thread needs
+- Alternatives to synchronize (e.g. check java.util.concurrent)
+    - Atomic Varaibles: all the methods are synchronized (i.e. atomic)
+        - when to use? : its just one value that is being changed by multiple threads
+        -  AtomicInteger, AtomicLong, AtomicBoolean, AtomicReference
+            - compareAndSet (CAS: compare-and-swap): similar to np.where(condition, other value), return a boolean variable if the operation is successful or not
+                - when you use CAS operations, you have to deal with times when the operation does not succeed
+            - incrementAndSet 
+    - Immutable objects: make class as final and all its instance variables as final
+        - It’s writing data from multiple threads that causes the most problems, not reading, so consider if your data needs to be changed at all or if it can be immutable.
+- concurrentModificationException: If a collection is changed by one thread while another thread is reading that collection
+    - thread-safe data structure: e.g. java.utils.concurrent.CopyOnWriteArrayList
+        - create a copy and write to it everytime there is a write operation
+        - potential issue: some threads are reading from the old data
+        - usage: lots of reading threads and not many writing
 
 
 
